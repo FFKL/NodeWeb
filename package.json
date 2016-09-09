@@ -1,0 +1,17 @@
+{
+  "name": "node-web",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "4.x",
+    "body-parser": "1.x",
+    "consolidate": "0.x",
+    "handlebars": "2.x",
+    "request": "2.x",
+    "passport": "0.3.2",
+    "cookie-parser": "1.4.3",
+    "cookie-session": "2.0.0-alpha.1",
+    "passport-local": "1.0.0",
+    "mongoose": "4.6.0",
+    "mocha": "3.0.2"
+  }
+}
