@@ -1,4 +1,4 @@
-module.exports = function (mongoose) {
+module.exports = (mongoose) => {
 
     const Schema = mongoose.Schema;
     const UserSchema = new Schema({

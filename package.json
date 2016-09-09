@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "dependencies": {
     "express": "4.x",
+    "express-flash": "0.0.2",
     "body-parser": "1.x",
     "consolidate": "0.x",
     "handlebars": "2.x",

@@ -1,14 +1,13 @@
 module.exports = {
-    login: function(req, res) {
-        if (req.user !== undefined) {
-            res.render('index', {
-                user: req.user
-            });
+    login: (req, res) => {
+        if (req.isAuthenticated()
+        ) {
+            res.redirect('/user');
         } else {
-            res.render('index');
+            res.render('index', {message: req.session.flash.error});
         }
     },
-    logout: function(req, res) {
+    logout: (req, res) => {
         req.logout();
         res.redirect('/');
     }
