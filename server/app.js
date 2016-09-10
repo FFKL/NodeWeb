@@ -12,20 +12,6 @@ require('./config/passport.js')(passport);
 
 const userController = require('./controllers/userController.js');
 
-/*var auth = function (req, res, next) {
-    passport.authenticate(
-        'local', function (err, user) {
-            console.log('auth ' + user);
-            if (!user) {
-                return res.redirect('/login');
-            }
-            req.logIn(user, function() {
-                return res.redirect('/user');
-            })
-        }
-    )(req, res, next);
-};*/
-
 var auth = passport.authenticate(
     'local', {
         successRedirect: '/user',
@@ -36,13 +22,14 @@ var auth = passport.authenticate(
 
 var mustBeAuthenticated = function(req, res, next) {
     console.log('isAuth ' + req.isAuthenticated());
-    req.isAuthenticated() ? next() : res.redirect('/');
+    req.isAuthenticated() ? next() : res.redirect('/login');
 };
 
-app.get('/', auth);
+app.get('/', (req, res) => {
+    res.redirect('/user');
+});
 app.post('/login', auth);
 app.post('/reg', (req, res) => {
-    console.log(req.body.username);
     var item = new User({login: req.body.username, password: req.body.password});
     item.save((err) => {
         if (!err) res.render('index');
@@ -55,9 +42,12 @@ app.get('/logout', userController.logout);
 app.all('/user', mustBeAuthenticated);
 app.all('/user/*', mustBeAuthenticated);
 
-app.get('/user', function(req,res) {
+app.get('/user', function(req, res) {
     res.render('index', {user: req.user});
 });
 
-app.listen(8080);
-console.log("Server has started");
+const server = app.listen(8080, function() {
+    console.log("Server has started");
+});
+
+module.exports = server;

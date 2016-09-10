@@ -8,7 +8,7 @@ const flash = require('express-flash');
 module.exports = (app, passport) => {
     app.engine('hbs', templates.handlebars);
     app.set('view engine', 'hbs');
-    app.set('views', './views');
+    app.set('views', './server/views');
 
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
