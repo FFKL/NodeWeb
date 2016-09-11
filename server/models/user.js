@@ -9,7 +9,7 @@ module.exports = (mongoose) => {
     });
 
     UserSchema.methods = {
-        authenticate: function(password) {
+        authenticate(password) {
             return this.password === password;
         }
     };
