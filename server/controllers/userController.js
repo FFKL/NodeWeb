@@ -9,7 +9,7 @@ module.exports = {
             res.redirect('/user');
         } else {
             if (req.session.flash)
-                res.render('index', {message: req.session.flash.error});
+                res.render('index', {error: req.session.flash.error});
             else
                 res.render('index');
         }
@@ -19,6 +19,32 @@ module.exports = {
         res.redirect('/');
     },
     register(req, res) {
+        let login = req.body.login;
+        let password = req.body.password;
+        let space = / /;
+        if (space.test(login) || space.test(password) || !login || !password)
+            res.render('index', {error: 'Login or password contains spaces'});
+        else {
+            let promise = User.find({login: login}).exec();
+            promise
+                .then((user) => {
+                    if (user.length === 0) {
+                        let newUser = new User({login: login, password: req.body.password});
+                        return newUser.save();
+                    } else {
+                        return login;
+                    }
+                })
+                .then((result) => {
+                    if (result._id)
+                        res.render('index', {message: result.login + ' was registered'});
+                    else
+                        res.render('index', {error: result + ' is existing. Enter another Login'});
+                })
+                .catch(error => console.log(error));
+        }
+    }
+    /*register(req, res) {
         let login = req.body.username;
         User.find({login: login}, (err, user) => {
             if (user.length === 0) {
@@ -32,5 +58,5 @@ module.exports = {
                 res.render('index', {message: login + ' is existing. Enter another Login'});
             }
         });
-    }
+    }*/
 };

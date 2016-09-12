@@ -22,7 +22,7 @@ describe('Authorization tests', () => {
     it('Auth with correct login/password', (done) => {
         agent
             .post('/login')
-            .send({ username: 'jo', password: 'ji' })
+            .send({ login: 'jo', password: 'ji' })
             .end((err, res) => {
                 let regCheck = res.text.includes('jo');
                 regCheck.should.be.true;
@@ -33,7 +33,7 @@ describe('Authorization tests', () => {
     it('Auth with correct login / wrong password', (done) => {
         agent
             .post('/login')
-            .send({username: 'j11', password: 'ji'})
+            .send({login: 'j11', password: 'ji'})
             .end((err, res) => {
                 let regCheck = res.text.includes('j11');
                 regCheck.should.be.false;
@@ -43,7 +43,7 @@ describe('Authorization tests', () => {
     it('Auth with wrong login / correct password', (done) => {
         agent
             .post('/login')
-            .send({username: 'jo', password: 'jie'})
+            .send({login: 'jo', password: 'jie'})
             .end((err, res) => {
                 let regCheck = res.text.includes('jo');
                 regCheck.should.be.false;
@@ -63,7 +63,7 @@ describe('Registration tests', () => {
     it('Register', (done) => {
         chai.request(server)
             .post('/reg')
-            .send({username: 'test', password: 'test'})
+            .send({login: 'test', password: 'test'})
             .end((err, res) => {
                 let regCheck = res.text.includes('test was registered');
                 regCheck.should.be.true;
@@ -77,7 +77,7 @@ describe('Registration tests', () => {
     it('Register with existing login', (done) => {
         chai.request(server)
             .post('/reg')
-            .send({username: 'test', password: 'tes'})
+            .send({login: 'test', password: 'tes'})
             .end((err, res) => {
                 let regCheck = res.text.includes('test was registered');
                 regCheck.should.be.false;

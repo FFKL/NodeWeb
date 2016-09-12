@@ -1,6 +1,9 @@
 {
   "name": "node-web",
   "version": "0.0.1",
+  "scripts": {
+    "start": "node ./server/app.js"
+  },
   "dependencies": {
     "express": "4.x",
     "express-flash": "0.0.2",
