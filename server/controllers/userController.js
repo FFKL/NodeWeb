@@ -23,7 +23,7 @@ module.exports = {
         let password = req.body.password;
         let space = / /;
         if (space.test(login) || space.test(password) || !login || !password)
-            res.render('index', {error: 'Login or password contains spaces'});
+            res.render('index', {error: 'Login/password contains spaces or was empty'});
         else {
             let promise = User.find({login: login}).exec();
             promise
@@ -44,19 +44,4 @@ module.exports = {
                 .catch(error => console.log(error));
         }
     }
-    /*register(req, res) {
-        let login = req.body.username;
-        User.find({login: login}, (err, user) => {
-            if (user.length === 0) {
-                let newUser = new User({login: login, password: req.body.password});
-                newUser.save((err) => {
-                    if (!err) {
-                        res.render('index', {message: login + ' was registered'});
-                    }
-                });
-            } else {
-                res.render('index', {message: login + ' is existing. Enter another Login'});
-            }
-        });
-    }*/
 };
