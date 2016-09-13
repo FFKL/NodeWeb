@@ -23,9 +23,8 @@ describe('Registration tests', () => {
             .end((err, res) => {
                 let regCheck = res.text.includes('test was registered');
                 regCheck.should.be.true;
-                User.find({login: 'test', password: 'test'}, function(err, user) {
-                    let length = user.length;
-                    length.should.equal(1);
+                User.count(function(err, count) {
+                    count.should.equal(1);
                     done();
                 });
             });
@@ -37,9 +36,8 @@ describe('Registration tests', () => {
             .end((err, res) => {
                 let regCheck = res.text.includes('is existing. Enter another Login');
                 regCheck.should.be.true;
-                User.find({login: 'test', password: 'tes'}, function(err, user) {
-                    let length = user.length;
-                    length.should.equal(0);
+                User.count(function(err, count) {
+                    count.should.equal(1);
                     done();
                 });
             })
@@ -51,9 +49,8 @@ describe('Registration tests', () => {
             .end((err, res) => {
                 let regCheck = res.text.includes(REGISTER_DATA_ERROR);
                 regCheck.should.be.true;
-                User.find({login: 'test ', password: 'tes'}, function(err, user) {
-                    let length = user.length;
-                    length.should.equal(0);
+                User.count(function(err, count) {
+                    count.should.equal(1);
                     done();
                 });
             })
@@ -65,9 +62,8 @@ describe('Registration tests', () => {
             .end((err, res) => {
                 let regCheck = res.text.includes(REGISTER_DATA_ERROR);
                 regCheck.should.be.true;
-                User.find({login: 'test', password: 'tes  '}, function(err, user) {
-                    let length = user.length;
-                    length.should.equal(0);
+                User.count(function(err, count) {
+                    count.should.equal(1);
                     done();
                 });
             })
@@ -79,9 +75,8 @@ describe('Registration tests', () => {
             .end((err, res) => {
                 let regCheck = res.text.includes(REGISTER_DATA_ERROR);
                 regCheck.should.be.true;
-                User.find({login: ' ', password: ' '}, function(err, user) {
-                    let length = user.length;
-                    length.should.equal(0);
+                User.count(function(err, count) {
+                    count.should.equal(1);
                     done();
                 });
             })
@@ -93,9 +88,8 @@ describe('Registration tests', () => {
             .end((err, res) => {
                 let regCheck = res.text.includes(REGISTER_DATA_ERROR);
                 regCheck.should.be.true;
-                User.find({login: '', password: 'pass'}, function(err, user) {
-                    let length = user.length;
-                    length.should.equal(0);
+                User.count(function(err, count) {
+                    count.should.equal(1);
                     done();
                 });
             })
@@ -107,11 +101,11 @@ describe('Registration tests', () => {
             .end((err, res) => {
                 let regCheck = res.text.includes(REGISTER_DATA_ERROR);
                 regCheck.should.be.true;
-                User.find({login: 'log', password: ''}, function(err, user) {
-                    let length = user.length;
-                    length.should.equal(0);
+                User.count(function(err, count) {
+                    count.should.equal(1);
                     done();
                 });
+
             })
     });
     it('Register with empty login and password', (done) => {
@@ -121,9 +115,8 @@ describe('Registration tests', () => {
             .end((err, res) => {
                 let regCheck = res.text.includes(REGISTER_DATA_ERROR);
                 regCheck.should.be.true;
-                User.find({login: '', password: ''}, function(err, user) {
-                    let length = user.length;
-                    length.should.equal(0);
+                User.count(function(err, count) {
+                    count.should.equal(1);
                     done();
                 });
             })
@@ -145,7 +138,7 @@ describe('Authorization tests', () => {
     });
 
     it('Auth with correct login/password', (done) => {
-        agent
+        chai.request.agent(server)
             .post('/login')
             .send({ login: 'test', password: 'test' })
             .end((err, res) => {
@@ -156,22 +149,23 @@ describe('Authorization tests', () => {
     });
 
     it('Auth with correct login / wrong password', (done) => {
-        agent
+        chai.request.agent(server)
+            .post('/login')
+            .send({login: 'test', password: 'testt'})
+            .end((err, res) => {
+                res.text.includes('test').should.be.false;
+                res.text.includes('Incorrect password.').should.be.true;
+                done();
+            });
+    });
+    it('Auth with wrong login / correct password', (done) => {
+        chai.request.agent(server)
             .post('/login')
             .send({login: 'testt', password: 'test'})
             .end((err, res) => {
                 let regCheck = res.text.includes('testt');
                 regCheck.should.be.false;
-                done();
-            });
-    });
-    it('Auth with wrong login / correct password', (done) => {
-        agent
-            .post('/login')
-            .send({login: 'test', password: 'testt'})
-            .end((err, res) => {
-                let regCheck = res.text.includes('test');
-                regCheck.should.be.false;
+                res.text.includes('Incorrect login.').should.be.true;
                 done();
             });
     });

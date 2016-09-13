@@ -12,6 +12,6 @@ require('./config/mongoose')(mongoose);
 require('./config/passport')(passport);
 require('./config/routes')(app, passport);
 
-const server = app.listen(PORT, () => { console.log("Server has started on localhost:" + PORT) });
+const server = app.listen(PORT, () => { console.log("Server started on localhost:" + PORT) });
 
 module.exports = server;
